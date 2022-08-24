@@ -4,7 +4,8 @@
 easyui-ssm-maven
 
 #### 软件架构
-软件架构说明
+
+![小区防疫管理系统](M:\豆浆油条小组\小区防疫管理系统.png)
 
 
 #### 安装教程
@@ -21,17 +22,33 @@ easyui-ssm-maven
 
 #### 参与贡献
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
 
 
-#### 码云特技
+#### 功能分析
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+![小区防疫管理系统功能分析](M:\豆浆油条小组\小区防疫管理系统功能分析.png)
+
+#### 系统演示图片
+
+##### 
+
+![image-20220824234004413](C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20220824234004413.png)
+
+![image-20220824234019243](C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20220824234019243.png)
+
+
+
+
+
+
+
+![image-20220824234127975](C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20220824234127975.png)
+
+![image-20220824234156213](C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20220824234156213.png)
+
+
+
+
+
+
+
