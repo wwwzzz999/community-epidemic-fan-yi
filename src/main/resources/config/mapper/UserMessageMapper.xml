@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 注意：接口映射文件的DTD是 mybatis-3-mapper.dtd 与config全局配置文件不同 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 编写一个mapper根节点，映射要代理的接口名称；一个mapper.xml对应一个Mapper接口; 使用namespace属性配置接口名称(package包名+接口名) -->
+<mapper namespace="com.smf.wqphd.dao.UserMessageMapper">
+     <!-- id对应接口方法的名称 
+                        从参数中获取参数值有两种方法：${}  和  #{}  ,${}可能产生sql注入攻击，建议使用#{} 
+     -->
+     <insert id="add" parameterType="com.smf.wqphd.bean.UserMessage">
+     insert into user_message(userName,nickName,password,userEmail,userPhone,userDate) 
+     values(#{userName},#{nickName},#{password},#{userEmail},#{userPhone},#{userDate})
+     </insert>
+     
+     <update id="edit" parameterType="com.smf.wqphd.bean.UserMessage">
+     update user_message 
+     <set>
+	     <if test="nickName!=null">
+	      nickName=#{nickName},
+	     </if>
+	      <if test="userEmail!=null">
+	      userEmail=#{userEmail},
+	     </if>
+	      <if test="userPhone!=null">
+	      userPhone=#{userPhone},
+	     </if>
+	      <if test="userDate!=null">
+	      userDate=#{userDate},
+	     </if>
+     </set>
+      <!-- 注意update和delete语句必须添加where条件，否则会修改全表数据 -->   
+      where userNo=#{userNo}
+     </update>
+     
+     
+     <delete id="delete" parameterType="com.smf.wqphd.bean.UserMessage">
+     delete from user_message where userNo=#{userNo}
+     </delete>
+     
+     
+
+	<!-- 1.公共的sql代码可以使用sql标记进行标注，需要使用时使用include标签进行包含 2.sql的关键词前后必须加上空格:select 
+		insert update delete where from -->
+	<sql id="selectsql"> select 
+		userNo,userName,nickName,password,userEmail,userPhone,userDate from 
+		user_message
+	</sql>
+	
+	<!-- select 标签对应查询操作, id是接口的方法名称，id值需要唯一 -->
+	<!-- 查询结果可以使用resultType类型匹配 或 resultMap类型映射 -->
+	<select id="findByPager"
+		parameterType="com.smf.wqphd.bean.Pager"
+		resultType="com.smf.wqphd.bean.UserMessage">
+		<include refid="selectsql" />
+		<!-- 动态sql语法,where标签会把前面多余的and关键词删除 -->
+		<where>
+			<if test="condition!=null and   condition.userName!=null">
+				and userName like concat('%',#{ condition.userName},'%')
+			</if>
+			<if test="condition!=null and   condition.nickName!=null">
+				and nickName like concat('%',#{ condition.nickName},'%')
+			</if>
+			<if test="condition!=null and   condition.userEmail!=null">
+				and userEmail like concat('%',#{ condition.userEmail},'%')
+			</if>
+			<if test="condition!=null and   condition.userPhone!=null">
+				and userPhone like concat('%',#{ condition.userPhone},'%')
+			</if>
+			<if test="condition!=null and   condition.userDate!=null">
+				<!-- mysql时间判断,本例查询同一天的数据,把两个时间的天数取出来进行等值判断 -->
+				and TO_DAYS(userDate) = TO_DAYS(#{condition.userDate})
+			</if>
+		</where>
+		<!-- 如果是分页查询，再进行分页过滤 -->
+		<if test="page!=null and size !=null">
+	     <!-- start 从哪一条数据开始查询start=(page-1)*size ， size查询多少条 -->
+		limit #{start},#{size}
+		</if>
+	</select>
+	
+	
+	<!-- 5个统计函数：  count计数函数，sum求和函数，min最小值，max最大值，avg平均值 -->
+	<select id="findTotalByPager"
+            parameterType="com.smf.wqphd.bean.Pager" resultType="int">
+		select count(*) from user_message
+		<!-- 动态sql语法,where标签会把前面多余的and关键词删除 -->
+		<where>
+			<if test="condition!=null and   condition.userName!=null">
+				and userName like concat('%',#{ condition.userName},'%')
+			</if>
+			<if test="condition!=null and   condition.nickName!=null">
+				and nickName like concat('%',#{ condition.nickName},'%')
+			</if>
+			<if test="condition!=null and   condition.userEmail!=null">
+				and userEmail like concat('%',#{ condition.userEmail},'%')
+			</if>
+			<if test="condition!=null and   condition.userPhone!=null">
+				and userPhone like concat('%',#{ condition.userPhone},'%')
+			</if>
+			<if test="condition!=null and   condition.userDate!=null">
+				<!-- mysql时间判断,本例查询同一天的数据,把两个时间的天数取出来进行等值判断 -->
+				and TO_DAYS(userDate) = TO_DAYS(#{condition.userDate})
+			</if>
+		</where>
+	</select>
+
+
+   <select id="login"
+		parameterType="com.smf.wqphd.bean.UserMessage"
+		resultType="com.smf.wqphd.bean.UserMessage">
+		<include refid="selectsql" />
+		where userName=#{userName} and password=#{password}
+   </select>
+
+</mapper>    
+    

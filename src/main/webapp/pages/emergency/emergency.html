@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 下载并引入jquery easyUI -->
+    <link href="https://cdn.bootcss.com/font-awesome/5.13.0/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+          href="../../js/jquery-easyui-1.9.5/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css"
+          href="../../js/jquery-easyui-1.9.5/themes/icon.css">
+    <link rel="stylesheet" type="text/css"
+          href="../../js/jquery-easyui-1.9.5/themes/color.css">
+    <script type="text/javascript"
+            src="../../js/jquery-easyui-1.9.5/jquery.min.js"></script>
+    <script type="text/javascript"
+            src="../../js/jquery-easyui-1.9.5/jquery.easyui.min.js"></script>
+    <script type="text/javascript"
+            src="../../js/context-menu.js"></script>
+
+</head>
+<body>
+<table id="transaction_dg" title="紧急事务管理" class="easyui-datagrid" style="width:100%;height:100%"
+       url="../emergency/list"
+       toolbar="#toolbar"
+       rownumbers="true" pagination=true pageList="[15,20,30,40,50]" pageSize="15" fitColumns="true"
+       singleSelect="true">
+    <thead>
+    <tr>
+
+        <th field="eId" width="50" hidden>事务名称</th>
+        <th field="eName" width="50" formatter="formatterEllipsis">事务名称</th>
+        <th field="eDetail" width="50" formatter="formatterEllipsis">详细情况</th>
+        <th field="createTime" width="50" sortable="true">创建时间</th>
+        <th field="updateTime" width="50" sortable="true">修改时间</th>
+    </tr>
+    </thead>
+    <script>
+        function formatterEllipsis(value, row, index) {
+            if (value) {
+                return "<div class='textEllipsis'>" + value + "</div>";
+            } else {
+                return '';
+            }
+        }
+    </script>
+</table>
+<div id="toolbar" style="padding: 5px">
+    <a href="#" class="easyui-linkbutton" iconCls="fa fa-plus" plain="true" onclick="newUser()">新建</a>
+    <a href="#" class="easyui-linkbutton" iconCls="fa fa-pencil-square-o" plain="true" onclick="editUser()">编辑</a>
+    <a href="#" class="easyui-linkbutton" iconCls="fa fa-minus" plain="true" onclick="destroyUser()">移除</a>
+    <!--    <input id="ss" class="easyui-searchbox" style="width:300px"-->
+    <!--           data-options="searcher:qq,prompt:'Please Input Value',menu:'#mm'">-->
+    <!--    <div id="mm" style="width:120px">-->
+    <!--        <div data-options="name:'eName'">事务名称</div>-->
+    <!--        <div data-options="name:'eDetail'">详细情况</div>-->
+    <!--    </div>-->
+    <span>事务名称:</span>
+    <input id="eName" style="line-height:26px;border:1px solid #ccc">
+    <span>详细情况:</span>
+    <input id="eDetail" style="line-height:26px;border:1px solid #ccc">
+    Date From: <input id="fromDate" class="easyui-datetimebox" style="width:170px">
+    To: <input id="toDate" class="easyui-datetimebox" style="width:170px" validType="equaldDate['#fromDate']">
+    <!--    plain 边线是否隐藏 false是隐藏-->
+    <a href="#" class="easyui-linkbutton" iconCls="fa fa-search" plain="true" onclick="doSearch()">搜索</a>
+    <a href="#" class="easyui-linkbutton" iconCls="fa fa-refresh" plain="true" onclick="doReload()">重置</a>
+    <script type="text/javascript">
+        $.extend($.fn.validatebox.defaults.rules,
+            {
+                equaldDate: {
+                    validator: function (value, param) {
+                        var d1 = $(param[0]).datetimebox('getValue'); //获取开始时间
+                        return value >= d1; //有效范围为大于开始时间的日期
+                    },
+                    message: '结束日期不能早于开始日期!'
+                }
+            });
+
+        function doSearch() {
+            // console.log(value+":"+name);
+            if ($('#fromDate').val() === '' && $('#toDate').val() !== '') {
+                $('#transaction_dg').datagrid('reload', {
+                    eName: $('#eName').val(),
+                    eDetail: $('#eDetail').val(),
+                    toDate: $('#toDate').val()
+                });
+            } else if ($('#fromDate').val() !== '' && $('#toDate').val() === '') {
+                $('#transaction_dg').datagrid('reload', {
+                    eName: $('#eName').val(),
+                    eDetail: $('#eDetail').val(),
+                    fromDate: $('#fromDate').val(),
+                });
+            } else if ($('#fromDate').val() > $('#toDate').val()) {
+                $.messager.show({	// show error message
+                    title: 'Error',
+                    msg: '时间输入错误,请重新输入'
+                });
+            } else if($('#fromDate').val() === '' && $('#toDate').val() === '') {
+                $('#transaction_dg').datagrid('reload', {
+                    eName: $('#eName').val(),
+                    eDetail: $('#eDetail').val(),
+                });
+            }else{
+                $('#transaction_dg').datagrid('reload', {
+                    eName: $('#eName').val(),
+                    eDetail: $('#eDetail').val(),
+                    fromDate: $('#fromDate').val(),
+                    toDate: $('#toDate').val()
+                });
+            }
+        }
+
+        function doReload() {
+            $("#eName").val('');
+            $("#eDetail").val('');
+            $('#fromDate').combo('setText', '');
+            $('#fromDate').val('')
+            $('#toDate').combo('setText', '');
+            $('#toDate').val('')
+        }
+    </script>
+</div>
+
+<!--表单对话框-->
+<div id="transaction_dlg" class="easyui-dialog" style="width:400px;padding:10px 20px"
+     closed="true" buttons="#dlg-buttons">
+    <h3 class="ftitle">紧急事务添加</h3>
+    <form id="transaction_fm" method="post">
+        <div class="fitem" style="margin-top: 5px;">
+            <label>事务名字:</label>
+            <input name="eName" class="easyui-validatebox" required="true" maxlength="20" style="height: 30px;
+    border-radius: 5px 5px 5px 5px;
+    outline: none;
+    border-color: white;">
+        </div>
+        <div class="fitem" style="margin-top: 5px;">
+            <label>事务详情:</label>
+            <textarea name="eDetail" class="easyui-validatebox" required="true" style="width: 353px;
+            height: 110px;resize: none;border-radius: 5px;outline: none;font-weight: 100;" maxlength="200"></textarea>
+        </div>
+    </form>
+</div>
+<div id="dlg-buttons">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#transaction_dlg').dialog('close')">取消</a>
+</div>
+
+<script>
+    function newUser() {
+        $('#transaction_dlg').dialog('open').dialog('setTitle', '创建事务');
+        $('#transaction_fm').form('clear');
+        url = '../emergency/add';
+    }
+
+    function saveUser() {
+        $('#transaction_fm').form('submit', {
+            url: url,
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (result) {
+                var result = eval('(' + result + ')');
+                if (result.success) {
+                    $('#transaction_dg').datagrid('reload');	// reload the user data
+                    $.messager.show({	// show error message
+                        title: 'Success',
+                        msg: result.errorMsg
+                    });
+                } else {
+                    $.messager.show({	// show error message
+                        title: 'Error',
+                        msg: result.errorMsg
+                    });
+                }
+                $('#transaction_dlg').dialog('close');		// close the dialog
+                $('#transaction_dg').datagrid('reload');	// reload the user data
+            }
+        });
+    }
+
+    function editUser() {
+        var row = $('#transaction_dg').datagrid('getSelected');
+        if (row) {
+            $('#transaction_dlg').dialog('open').dialog('setTitle', '编辑事务');
+            $('#transaction_fm').form('load', row);
+            url = '../emergency/edit?eId=' + row.eId;
+        }
+    }
+
+    function destroyUser() {
+        var row = $('#transaction_dg').datagrid('getSelected');
+        if (row) {
+            $.messager.confirm('Confirm', '你确定要删除么?', function (r) {
+                if (r) {
+                    $.post('../emergency/delete', {eId: row.eId}, function (result) {
+                        if (result.success) {
+                            $('#transaction_dg').datagrid('reload');	// reload the user data
+                            $.messager.show({	// show error message
+                                title: 'Success',
+                                msg: result.errorMsg
+                            });
+                        } else {
+                            $.messager.show({	// show error message
+                                title: 'Error',
+                                msg: result.errorMsg
+                            });
+                        }
+                    }, 'json');
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>

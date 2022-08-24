@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smf.wqphd.dao.PeopleManageMapper">
+
+    <sql id="selectsql"> select * from tbl_peoplemanage</sql>
+
+    <select id="findByPager"
+            parameterType="com.smf.wqphd.bean.Pager"
+            resultType="com.smf.wqphd.bean.PeopleManage">
+        select  * from tbl_peoplemanage pm
+        <!-- 动态sql语法,where标签会把前面多余的and关键词删除 -->
+        <where>
+            <if test="condition!=null and   condition.p_id!=null">
+                and p_id like concat('%',#{ condition.p_id},'%')
+            </if>
+            <if test="condition!=null and   condition.p_name!=null">
+                and p_name like concat('%',#{ condition.p_name},'%')
+            </if>
+            <if test="condition!=null and   condition.p_telephone!=null">
+                and p_telephone like concat('%',#{ condition.p_telephone},'%')
+            </if>
+            <if test="condition!=null and   condition.p_card!=null">
+                and p_card like concat('%',#{ condition.p_card},'%')
+            </if>
+            <if test="condition!=null and   condition.p_email!=null">
+                and p_email like concat('%',#{ condition.p_email},'%')
+            </if>
+
+            <if test="condition!=null and   condition.create_time!=null">
+                and create_time like concat('%',#{ condition.create_time},'%')
+            </if>
+            <if test="condition!=null and   condition.update_time!=null">
+                and update_time like concat('%',#{ condition.update_time},'%')
+            </if>
+
+            <if test="condition!=null and   condition.a_id!=null">
+                and a_id like concat('%',#{ condition.a_id},'%')
+            </if>
+        </where>
+            LEFT JOIN  tab_area area ON pm.a_id=area.a_id
+        <!-- 如果是分页查询，再进行分页过滤 -->
+        <if test="page!=null and size !=null">
+            <!-- start 从哪一条数据开始查询start=(page-1)*size ， size查询多少条 -->
+            limit #{start},#{size}
+        </if>
+    </select>
+
+
+
+    <!--    s_id,m_id,s_send_time,s_
+    number,create_time,update_time,a_id,-->
+    <!-- 5个统计函数：  count计数函数，sum求和函数，min最小值，max最大值，avg平均值 -->
+    <select id="findTotalByPager"
+            parameterType="com.smf.wqphd.bean.Pager" resultType="int">
+        select count(*) from tbl_peoplemanage
+        <!-- 动态sql语法,where标签会把前面多余的and关键词删除 -->
+        <where>
+            <if test="condition!=null and   condition.p_name!=null">
+                and p_name like concat('%',#{ condition.p_name},'%')
+            </if>
+            <if test="condition!=null and   condition.p_telephone!=null">
+                and p_telephone like concat('%',#{ condition.p_telephone},'%')
+            </if>
+            <if test="condition!=null and   condition.p_card!=null">
+                and p_card like concat('%',#{ condition.p_card},'%')
+            </if>
+            <if test="condition!=null and   condition.p_email!=null">
+                and p_email like concat('%',#{ condition.p_email},'%')
+            </if>
+
+            <if test="condition!=null and   condition.create_time!=null">
+                and create_time like concat('%',#{ condition.create_time},'%')
+            </if>
+
+            <if test="condition!=null and   condition.update_time!=null">
+                and update_time like concat('%',#{ condition.update_time},'%')
+            </if>
+            <if test="condition!=null and   condition.a_id!=null">
+                and a_id like concat('%',#{ condition.a_id},'%')
+            </if>
+
+        </where>
+    </select>
+
+
+    <!--    添加-->
+
+    <insert id="add" parameterType="com.smf.wqphd.bean.PeopleManage">
+        insert into tbl_peoplemanage(p_id,p_name,p_telephone,p_card,p_email,create_time,update_time,a_id,h_status,h_case)
+        values(#{p_id},#{p_name},#{p_telephone},#{p_card},#{p_email},#{create_time},#{update_time},#{a_id},#{h_status},#{h_case})
+    </insert>
+
+
+    <!--    修改-->
+
+    <update id="edit" parameterType="com.smf.wqphd.bean.PeopleManage">
+        update tbl_peoplemanage
+        <set>
+            <if test="p_name!=null ">
+                p_name=#{p_name},
+            </if>
+            <if test="p_telephone!=null">
+                p_telephone=#{p_telephone},
+            </if>
+            <if test="p_card!=null">
+                p_card=#{p_card},
+            </if>
+            <if test="p_email!=null">
+                p_email=#{p_email},
+            </if>
+            <if test="update_time!=null">
+                update_time=#{update_time},
+            </if>
+            <if test="a_id!=null">
+                a_id=#{a_id},
+            </if>
+            <if test="h_status!=null">
+                h_status=#{h_status},
+            </if>
+            <if test="h_case!=null">
+                h_case=#{h_case},
+            </if>
+        </set>
+        <!-- 注意update和delete语句必须添加where条件，否则会修改全表数据 -->
+        where p_id=#{p_id}
+    </update>
+
+
+    <!--    删除-->
+    <delete id="delete" parameterType="com.smf.wqphd.bean.PeopleManage">
+        delete from tbl_peoplemanage where p_id=#{p_id}
+    </delete>
+
+
+    <select id="selectBystatus" resultType="com.smf.wqphd.bean.PeopleManage" parameterType="String">
+        SELECT * FROM tbl_peoplemanage pm LEFT JOIN  tab_area area ON pm.a_id=area.a_id where h_status=#{h_status}
+    </select>
+
+
+</mapper>

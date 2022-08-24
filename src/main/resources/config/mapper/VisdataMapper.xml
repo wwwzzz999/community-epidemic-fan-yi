@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 注意：接口映射文件的DTD是 mybatis-3-mapper.dtd 与config全局配置文件不同 -->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 编写一个mapper根节点，映射要代理的接口名称；一个mapper.xml对应一个Mapper接口; 使用namespace属性配置接口名称(package包名+接口名) -->
+<mapper namespace="com.smf.wqphd.dao.visDao">
+    <select id="picdataList" resultType="com.smf.wqphd.bean.Visdata" resultMap="OrderMap">
+        SELECT h_status,COUNT(*) num FROM tbl_peoplemanage GROUP BY h_status;
+    </select>
+    <select id="colList" resultType="com.smf.wqphd.bean.Colpic">
+        SELECT m_name,m_storage FROM tbl_materialtype;
+    </select>
+
+
+    <resultMap type="com.smf.wqphd.bean.Visdata" id="OrderMap">
+        <id column="h_status" property="name"/>
+        <result column="num" property="y"/>
+    </resultMap>
+
+
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smf.wqphd.dao.RootDao">
+    <update id="updateByName">
+        update tab_root set u_password=#{password} where u_name=#{name}
+    </update>
+    <select id="selectAll" resultType="com.smf.wqphd.bean.Root_user">
+        select * from tab_root
+    </select>
+    <select id="selectByName" resultType="com.smf.wqphd.bean.Root_user" parameterType="String">
+        select * from tab_root where u_name=#{name}
+    </select>
+</mapper>

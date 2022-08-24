@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smf.wqphd.dao.MaterialTypeMapper">
+
+    <sql id="selectsql"> select * from tbl_materialtype</sql>
+
+    <select id="findByPager"
+            parameterType="com.smf.wqphd.bean.Pager"
+            resultType="com.smf.wqphd.bean.MaterialType">
+        <include refid="selectsql" />
+        <!-- 动态sql语法,where标签会把前面多余的and关键词删除 -->
+        <where>
+            <if test="condition!=null and   condition.m_id!=null">
+                and m_id like concat('%',#{ condition.m_id},'%')
+            </if>
+            <if test="condition!=null and   condition.m_name!=null">
+                and m_name like concat('%',#{ condition.m_name},'%')
+            </if>
+            <if test="condition!=null and   condition.m_storage!=null">
+                and m_storage like concat('%',#{ condition.m_storage},'%')
+            </if>
+            <if test="condition!=null and   condition.m_desc!=null">
+                and m_desc like concat('%',#{ condition.m_desc},'%')
+            </if>
+            <if test="condition!=null and   condition.create_time!=null">
+                and create_time like concat('%',#{ condition.create_time},'%')
+            </if>
+            <if test="condition!=null and   condition.update_time!=null">
+                and update_time like concat('%',#{ condition.update_time},'%')
+            </if>
+
+        </where>
+        <!-- 如果是分页查询，再进行分页过滤 -->
+        <if test="page!=null and size !=null">
+            <!-- start 从哪一条数据开始查询start=(page-1)*size ， size查询多少条 -->
+            limit #{start},#{size}
+        </if>
+    </select>
+
+
+
+
+    <!--    s_id,m_id,s_send_time,s_number,create_time,update_time,a_id,-->
+    <!-- 5个统计函数：  count计数函数，sum求和函数，min最小值，max最大值，avg平均值 -->
+    <select id="findTotalByPager"
+            parameterType="com.smf.wqphd.bean.Pager" resultType="int">
+        select count(*) from tbl_materialtype
+        <!-- 动态sql语法,where标签会把前面多余的and关键词删除 -->
+        <where>
+            <if test="condition!=null and   condition.m_id!=null">
+                and m_id like concat('%',#{ condition.m_id},'%')
+            </if>
+            <if test="condition!=null and   condition.m_id!=null">
+                and m_name like concat('%',#{ condition.m_id},'%')
+            </if>
+            <if test="condition!=null and   condition.m_storage!=null">
+                and m_storage like concat('%',#{ condition.m_storage},'%')
+            </if>
+            <if test="condition!=null and   condition.m_desc!=null">
+                and m_desc like concat('%',#{ condition.m_desc},'%')
+            </if>
+
+            <if test="condition!=null and   condition.create_time!=null">
+                and create_time like concat('%',#{ condition.create_time},'%')
+            </if>
+
+            <if test="condition!=null and   condition.update_time!=null">
+                and update_time like concat('%',#{ condition.update_time},'%')
+            </if>
+
+        </where>
+    </select>
+
+
+    <!--    添加-->
+
+    <insert id="add" parameterType="com.smf.wqphd.bean.MaterialType">
+        insert into tbl_materialtype(m_id,m_name,m_storage,m_desc,create_time,update_time)
+        values(#{m_id},#{m_name},#{m_storage},#{m_desc},#{create_time},#{update_time})
+    </insert>
+
+
+
+    <!--    修改-->
+
+    <update id="edit" parameterType="com.smf.wqphd.bean.MaterialType">
+        update tbl_materialtype
+        <set>
+
+            <if test="m_name!=null">
+                m_name=#{m_name},
+            </if>
+            <if test="m_storage!=null">
+                m_storage=#{m_storage},
+            </if>
+            <if test="m_desc!=null">
+                m_desc=#{m_desc},
+            </if>
+            <if test="update_time!=null">
+                update_time=#{update_time},
+            </if>
+        </set>
+        <!-- 注意update和delete语句必须添加where条件，否则会修改全表数据 -->
+        where m_id=#{m_id}
+    </update>
+
+
+    <!--    删除-->
+    <delete id="delete" parameterType="com.smf.wqphd.bean.MaterialType">
+        delete from tbl_materialtype where m_id=#{m_id}
+    </delete>
+
+</mapper>

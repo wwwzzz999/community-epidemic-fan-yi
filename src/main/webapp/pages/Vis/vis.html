@@ -1,0 +1,409 @@
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>首页</title>
+    <link rel="stylesheet" href="../../css/bootstrap.css">
+
+
+    <!-- 下载并引入jquery easyUI -->
+<!--    <link rel="stylesheet" type="text/css"-->
+<!--          href="../../js/jquery-easyui-1.9.5/themes/default/easyui.css">-->
+<!--    <link rel="stylesheet" type="text/css"-->
+<!--          href="../../js/jquery-easyui-1.9.5/themes/icon.css">-->
+<!--    <link rel="stylesheet" type="text/css"-->
+<!--          href="../../js/jquery-easyui-1.9.5/themes/color.css">-->
+<!--    <script type="text/javascript"-->
+<!--            src="../../js/jquery-easyui-1.9.5/jquery.min.js"></script>-->
+<!--    <script type="text/javascript"-->
+<!--            src="../../js/jquery-easyui-1.9.5/jquery.easyui.min.js"></script>-->
+    <script src="../../js/bootstrap/vue.js"></script>
+    <script src="../../js/jquery.js"></script>
+    <script src="../../js/bootstrap/axios.min.js"></script>
+    <script src="../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../js/highcharts.js"></script>
+
+
+    <style>
+        #container {
+            margin:50px;
+            box-shadow:  2px 2px 5px #888888;
+            border-radius: 5px;
+            background-color:#fff;
+        }
+        #container1 {
+            /*margin-top:50px;*/
+            box-shadow:  2px 2px 5px #888888;
+            border-radius: 5px;
+            background-color:#fff;
+        }
+        #app{
+            float:left;
+            margin-right:20px;
+        }
+    </style>
+</head>
+<body>
+<div><h2 align="center">小区数据动态展示</h2></div><br>
+<div id="container" style="width: 550px; height: 400px; float: left;" ></div>
+<div id="container1" style="width: 550px; height: 400px; margin: 50px 20px; float: left"></div>
+<!--<div id="container1" style="width: 550px; height: 400px; margin: 50px 20px; float: left"></div>-->
+<br>
+<!--<div style="clear:both">-->
+<!--    <p>kkk</p>-->
+<!--    <h3>llllll</h3>-->
+<!--</div>-->
+
+<div id="app">
+    <div class="col-md-6 column" style="margin-top:-20px">
+        <div id="bk">
+            <div style="padding-top:30px;padding-left:10px">
+                <p><h3>肺炎疫情动态播报</h3></p>
+            </div>
+        </div>
+        <div class="tabbable" id="tabs-290953" style="width: 450px;">
+            <ul class="nav nav-tabs" >
+                <li class="active" style="width: 220px;">
+                    <a href="#panel-419117" data-toggle="tab">全国疫情数据(含港澳台)</a>
+                </li>
+                <li style="width: 220px;">
+                    <a href="#panel-146204" data-toggle="tab">{{chinaplace[index].name}}疫情数据</a>
+                </li>
+            </ul>
+            <div class="tab-content" >
+                <div class="tab-pane active" id="panel-419117">
+                    <p>
+                    <ul style="list-style-type:none;">
+                        <li style="float:left; margin-top:4px;">
+                            <div style="text-align: center; width: 150px;height: 100px; ;   margin-left: -40px;">
+                                <h4>境外输入</h4>
+                                <p style=" margin-top: -10px;"><h3 style="border-right: 1px solid #f1f1f1; color: #ffa352;">{{yiqing.chinaTotal.total.input}}</h3></p>
+                                <p>较昨日<span style="color: #ffa352">+{{yiqing.chinaTotal.today.input}}</span></p>
+                            </div>
+
+                        </li>
+                        <li style="float:left; margin-top:4px;">
+                            <div style="text-align: center; width: 150px;height: 100px; ; ">
+                                <h4>无症感染者</h4>
+                                <p style=" margin-top: -10px;"><h3 style="border-right: 1px solid #f1f1f1; color: #791618;">{{yiqing.chinaTotal.extData.noSymptom}}</h3></p>
+                                <p>较昨日<span style="color: #791618;">+{{yiqing.chinaTotal.extData.incrNoSymptom}}</span></p>
+                            </div>
+                        </li>
+                        <li style="float:left; margin-top:4px;">
+                            <div style="text-align: center; width: 150px;height: 100px;  ">
+                                <h4>现有确诊</h4>
+                                <p style=" margin-top: -10px;"><h3 style="border-right: 1px solid #f1f1f1; color: #e44a3d;">{{yiqing.chinaTotal.total.confirm-yiqing.chinaTotal.total.dead-yiqing.chinaTotal.total.heal}}</h3></p>
+                                <p>较昨日<span style="color: #e44a3d;">{{yiqing.chinaTotal.today.storeConfirm}}</span></p>
+                            </div>
+                        </li>
+
+
+
+                        <li style="float:left; margin-top:4px;">
+                            <div style="text-align: center; width: 150px;height: 100px;    margin-left: -40px;">
+                                <h4>累计确诊</h4>
+                                <p style=" margin-top: -10px;"><h3 style="border-right: 1px solid #f1f1f1; color: #a31d13;">{{yiqing.chinaTotal.total.confirm}}</h3></p>
+                                <p>较昨日<span style="color: #a31d13;">+{{yiqing.chinaTotal.today.confirm}}</span></p>
+                            </div>
+
+                        </li>
+                        <li style="float:left; margin-top:4px;">
+                            <div style="text-align: center; width: 150px;height: 100px; ;">
+                                <h4>累计死亡</h4>
+                                <p style=" margin-top: -10px;"><h3 style="border-right: 1px solid #f1f1f1;color: #333333;">{{yiqing.chinaTotal.total.dead}}</h3></p>
+                                <p>较昨日<span style="color: #333333;">+{{yiqing.chinaTotal.today.dead}}</span></p>
+                            </div>
+                        </li>
+                        <li style="float:left; margin-top:4px;">
+                            <div style="text-align: center; width: 150px;height: 100px;">
+                                <h4>累计治疗</h4>
+                                <p style=" margin-top: -10px;"><h3 style="border-right: 1px solid #f1f1f1; color: #34aa70;">{{yiqing.chinaTotal.total.heal}}</h3></p>
+                                <p>较昨日<span style="color: #34aa70;">+{{yiqing.chinaTotal.today.heal}}</span></p>
+                            </div>
+                        </li>
+
+                    </ul>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;截止日期:{{yiqing.lastUpdateTime}}</span>
+                    </p>
+
+                </div>
+
+
+
+                <div class="tab-pane" id="panel-146204">
+                    <p>
+                    <ul style="list-style-type:none;">
+                        <li style="float:left; margin-top:4px;">
+                            <div style="text-align: center; width: 150px;height: 100px; ;   margin-left: -40px;">
+                                <h4>累计确诊</h4>
+                                <p style=" margin-top: -10px;"><h3 style="border-right: 1px solid #f1f1f1; color: #ffa352;">{{chinaplace[index].total.confirm}}</h3></p>
+                                <!--                <p>较昨日<span>+{{chinaplace[index].today.confirm}}</span></p>-->
+                            </div>
+
+                        </li>
+                        <li style="float:left; margin-top:4px;">
+                            <div style="text-align: center; width: 150px;height: 100px; ; ">
+                                <h4>累计死亡</h4>
+                                <p style=" margin-top: -10px;"><h3 style="border-right: 1px solid #f1f1f1; color: #791618;">{{chinaplace[index].total.dead}}</h3></p>
+                                <!--                <p>较昨日<span>+{{chinaplace[index].today.dead}}</span></p>-->
+                            </div>
+                        </li>
+                        <li style="float:left; margin-top:4px;">
+                            <div style="text-align: center; width: 150px;height: 100px;  ">
+                                <h4>累计治愈</h4>
+                                <p style=" margin-top: -10px;"><h3 style="border-right: 1px solid #f1f1f1; color: #e44a3d;">{{chinaplace[index].total.heal}}</h3></p>
+                                <!--                <p>较昨日<span>+{{chinaplace[index].today.heal}}</span></p>-->
+                            </div>
+                        </li>
+                    </ul>
+                    <span>截止时间:{{yiqing.lastUpdateTime}}</span>
+                    </p>
+
+
+                    <div class="btn-group" >
+                        <button   style="border-radius: 15px; width: 150px;" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                            {{chinaplace[index].name}}&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-menu-down"></span>
+                        </button>
+                        <select name="selectList" size="8" @change="getValue($event)"  class="dropdown-menu">
+                            <option v-for="(place,index) in chinaplace" :value="index">{{place.name}}</option>
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+<img src="/images/LOGO.png" style="float: right;margin-right:250px;margin-top:150px">
+
+
+
+
+
+
+
+
+<!--<script src="../../js/bootstrap/vue.js"></script>-->
+<!--<script src="../../js/jquery.js"></script>-->
+<!--<script src="../../js/bootstrap/axios.min.js"></script>-->
+<!--<script src="../../js/bootstrap/bootstrap.min.js"></script>-->
+
+
+
+
+
+
+
+
+
+
+<script language="JavaScript">
+        $(function () {
+            pic();
+            col();
+        });
+
+        function pic(){
+            var data="";
+            var color=new Array();
+            $.ajax({
+                async:false,
+                url: "/vis/getPic",
+                success: function (result){
+                    data=result;
+                    console.log(data);
+                    for (let index=0;index<data.length;index++){
+                        if(data[index].name=="绿码"){
+                            color[index]="#1ba71b";
+                        }else if(data[index].name=="黄码"){
+                            color[index]="#ffe002";
+                        }else if(data[index].name=="红码"){
+                            color[index]="#FF5733";
+                        }
+                    };
+                    console.log(color);
+
+                }
+            });
+            $('#container').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false
+                },
+                colors:color,
+                title: {
+                    text: '动态展示居民健康统计'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            color: '#000000',
+                            connectorColor: '#000000',
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        }
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Browser share',
+                    data: data
+                }]
+            });
+        }
+
+//        柱形图
+
+        function col(){
+             var xdata=[];
+             var ydata=[];
+            $.ajax({
+                url: "/vis/getCol",
+                success: function (result){
+                    //console.log(result);
+                    for(let index=0;index<result.length;index++){
+                         xdata[index]=result[index].m_name;
+                         ydata[index]=result[index].m_storage;
+                    }
+                    $('#container1').highcharts({
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: '动态展示小区物资'
+                        },
+
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: {
+                            categories: xdata,
+                            crosshair: true
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: '数量:个'
+                            },
+                            tickPositions: [0, 50, 100, 150,200,250,300]
+                        },
+                        tooltip: {
+                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+                            footerFormat: '</table>',
+                            shared: true,
+                            useHTML: true
+                        },
+                        plotOptions: {
+                            column: {
+                                pointPadding: 0.2,
+                                borderWidth: 0
+                            }
+                        },
+                        series: [{
+                            name: '物资',
+                            data: ydata
+                        }/*,
+  	       {
+  	            name: '时间(h)',
+  	            data: [90,80,70,60,50,40,90,80,70,60,50,40,50]
+  	        }*/]
+                    });
+                },error:function(){
+
+                }
+
+
+
+
+            });
+
+        }
+
+
+        var app= new Vue({
+            el: '#app',
+            data:{
+                index:0,
+                yiqing:[],
+                chinaplace:[],
+                province:"",
+                city:""
+
+            },
+            methods:{
+                getValue:function(event){
+                    event.target.value
+                    this.index=event.target.value;
+                    console.log(this.index);
+                },
+                getData(){
+                    var that=this;
+                    axios.get("http://120.25.72.162:8081/getMessage?name=yiqing").then(function (response) {
+                        that.yiqing=response.data.data;
+                        that.chinaplace=response.data.data.areaTree[2].children;
+                        for(var i =0 ; i<that.chinaplace.length;i++){
+                            if((that.chinaplace[i].name+"省")==that.province) {
+                                that.index=i;
+                                console.log(i);
+                            }
+                        }
+
+
+                    }).catch(function (err) {console.log(err);});
+
+
+
+                },
+
+
+
+                getloca(){
+                    var that = this;
+                    $.ajax({
+                         async: false,
+                        type: "GET",
+                        dataType: 'jsonp',
+                        jsonp: 'callback',
+                        jsonpCallback: 'callbackfunction',
+                        url: "https://r.inews.qq.com/api/ip2city?otype=jsonp&callback=callback&callback=__jp1",
+                        data: "",
+
+                        contentType: "application/json;utf-8",
+                        success: function(msg) {
+                            //console.log(msg);
+                            that.city=msg.city;
+                            that.province=msg.province;
+                            // sessionStorage.setItem("province",that.province);
+                            // sessionStorage.setItem("city",that.city);
+
+                            console.log(that.province);
+                        },
+
+
+                    });
+
+                }
+            },
+            created(){
+                this.getloca();
+                this.getData();
+            }
+
+
+        });
+
+
+</script>
+</body>
+</html>

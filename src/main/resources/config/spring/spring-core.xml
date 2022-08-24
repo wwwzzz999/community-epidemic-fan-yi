@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 修改ns名称空间，引入spring的其它配置模块:beans核心工厂，context上下文环境，tx事务管理 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	 http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+  	 http://www.springframework.org/schema/context 
+  	 http://www.springframework.org/schema/context/spring-context-4.2.xsd
+ 	 http://www.springframework.org/schema/tx 
+ 	 http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+
+	<!-- 使用新文件整合spring+mybatis -->
+	<!-- 加载外部资源文件 -->
+	<context:property-placeholder
+		location="classpath:config/spring/db.properties" />
+	<!-- 扫描注解所在包，由spring完成依赖注入 -->
+	<context:component-scan
+		base-package="com.smf.wqphd.service" />
+
+	<!-- 配置mybatis自带pooled数据源 -->
+	<bean id="dataSource"
+		class="org.apache.ibatis.datasource.pooled.PooledDataSource">
+		<property name="username" value="${user}" />
+		<property name="password" value="${password}" />
+		<property name="url" value="${url}" />
+		<property name="driver" value="${driver}" />
+	</bean>
+
+	<!-- 事务管理器 （JDBC） -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 启动声明式事务驱动 -->
+	<tx:annotation-driven
+		transaction-manager="transactionManager" />
+
+	<!-- spring和mybatis的集成 -->
+	<bean id="sf" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 注入数据源对象 -->
+		<property name="dataSource" ref="dataSource" />
+		<!-- 扫描 po 包，使用别名 -->
+		<property name="typeAliasesPackage"
+			value="com.smf.wqphd.bean"></property>
+		<!-- 扫描映射文件 -->
+		<property name="mapperLocations">
+			<array>
+				<!-- 分包管理可以配置多个value路径： -->
+				<value>classpath:config/mapper/*.xml</value>
+			</array>
+		</property>
+	</bean>
+
+	<!-- 创建dao接口类的扫描器：将dao接口实例自动加载到spring容器中 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.smf.wqphd.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sf" />
+	</bean>
+
+
+</beans>

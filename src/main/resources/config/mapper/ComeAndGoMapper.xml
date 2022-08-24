@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smf.wqphd.dao.ComeAndGoMapper">
+
+    <sql id="selectsql"> select
+         o_id, o_name, o_case, o_address, o_gtime, o_btime, create_time, update_time from comeandgo
+
+    </sql>
+
+    <!--    出入管理查询语句-->
+    <select id="findByPager"
+            parameterType="Pager"
+            resultType="ComeAndGo">
+        <include refid="selectsql" />
+        <!-- 如果是分页查询，再进行分页过滤 -->
+        <if test="page!=null and size !=null">
+            <!-- start 从哪一条数据开始查询start=(page-1)*size ， size查询多少条 -->
+            limit #{start},#{size}
+        </if>
+    </select>
+    <select id="findTotalByPager" parameterType="Pager"
+            resultType="int">
+        select count(*) from comeandgo
+    </select>
+
+    <!--    新增一条出入人员信息-->
+    <insert id="add" parameterType="ComeAndGo">
+        insert into
+            comeandgo(o_name,o_case,o_address,o_gtime,create_time)
+        values(#{o_name},#{o_case},#{o_address},#{o_gtime},#{create_time})
+    </insert>
+
+
+    <update id="edit" parameterType="ComeAndGo">
+        update comeandgo
+        set o_btime = #{o_btime},update_time = #{update_time}
+        where o_id = #{o_id}
+    </update>
+
+    <delete id="deleteById" parameterType="Integer">
+
+        delete from comeandgo where o_id = #{o_id}
+
+    </delete>
+
+
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  <!-- configuration是配置文件的根节点，xml编程要求所有的xml编写唯一一个根节点  -->
+ <configuration>
+  <!-- 在配置文件内可以配置以下内容： (properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, 
+ objectWrapperFactory?, reflectorFactory?, plugins?, environments?, databaseIdProvider?, mappers?) -->
+  
+  <!-- mybatis常用配置 -->
+  <properties>
+     <!-- 配置jdbc连接参数 -->
+     <property name="url" value="jdbc:mysql://localhost:3306/pss_db?useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=Asia/Shanghai"/>
+     <property name="username" value="root"/>
+     <property name="password" value="root"/>
+     <property name="driver" value="com.mysql.jdbc.Driver"/>
+  </properties>
+  
+  <!-- 配置类型别名 -->
+  <typeAliases>
+  <!-- 编码时需要修改这里 -->
+  
+  </typeAliases>
+  
+  
+ 
+   <!-- 配置mybatis运行环境参数 -->
+   <environments default="development">
+    <environment id="development">
+       <!-- 事务管理类型，使用jdbc进行管理 -->
+      <transactionManager type="JDBC"/>
+      <!-- 配置mybatis连接池，连接池的作用是提高数据库连接打开的效率，优化数据库操作的性能(连接池优化的原理?) -->
+      <dataSource type="POOLED">
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  
+  <!-- 关联mybatis接口映射文件 -->
+  <mappers>
+    <!-- 编码时需要修改 -->
+    <!-- 注册mapper接口   或  映射文件  -->
+    
+   <mapper resource="config/mapper/UserMessageMapper.xml"/>
+     
+  </mappers>
+  
+ </configuration> 
+  

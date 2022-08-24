@@ -1,0 +1,103 @@
+{
+  "page": 1,
+  "size": 10,
+  "condition": null,
+  "total": 16,
+  "rows": [
+    {
+      "userNo": 10001,
+      "userName": "管理员",
+      "nickName": "222",
+      "password": "123",
+      "userPhone": "13411110000",
+      "userEmail": "",
+      "userDate": "2017/03/15"
+    },
+    {
+      "userNo": 10002,
+      "userName": "天天",
+      "nickName": null,
+      "password": "321",
+      "userPhone": "13200001111",
+      "userEmail": null,
+      "userDate": null
+    },
+    {
+      "userNo": 10003,
+      "userName": "月月",
+      "nickName": null,
+      "password": "666",
+      "userPhone": null,
+      "userEmail": null,
+      "userDate": null
+    },
+    {
+      "userNo": 10004,
+      "userName": "小米",
+      "nickName": "小米",
+      "password": "888",
+      "userPhone": "13456789543",
+      "userEmail": "",
+      "userDate": null
+    },
+    {
+      "userNo": 10005,
+      "userName": "的骷髅法师",
+      "nickName": "",
+      "password": "111",
+      "userPhone": "",
+      "userEmail": "sdg@163.com",
+      "userDate": "2017/03/17"
+    },
+    {
+      "userNo": 10006,
+      "userName": "hjhv",
+      "nickName": "",
+      "password": "111",
+      "userPhone": "",
+      "userEmail": "sdg@163.com",
+      "userDate": "2017/03/17"
+    },
+    {
+      "userNo": 10007,
+      "userName": "2316546",
+      "nickName": "",
+      "password": "1024",
+      "userPhone": "",
+      "userEmail": "sdg@163.com",
+      "userDate": "2017/03/17"
+    },
+    {
+      "userNo": 10008,
+      "userName": "45867",
+      "nickName": "",
+      "password": "5467",
+      "userPhone": "",
+      "userEmail": "sdg@163.com",
+      "userDate": "2017/03/17"
+    },
+    {
+      "userNo": 10009,
+      "userName": "6+85",
+      "nickName": "",
+      "password": "56+8",
+      "userPhone": "",
+      "userEmail": "sdg@163.com",
+      "userDate": "2017/03/17"
+    },
+    {
+      "userNo": 10010,
+      "userName": "45678",
+      "nickName": "",
+      "password": "787",
+      "userPhone": "",
+      "userEmail": "sdg@163.com",
+      "userDate": "2017/03/17"
+    }
+  ],
+  "start": 0,
+  "end": 10,
+  "nextPage": 2,
+  "pages": 2,
+  "prePage": 1
+}

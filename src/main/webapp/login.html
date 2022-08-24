@@ -1,0 +1,148 @@
+<!doctype html>
+<html style="height:100%; height:100%;">
+<head>
+	<meta charset="utf-8">
+	<title>小区防疫管理系统登陆</title>
+
+
+	<!-- 下载并引入jquery easyUI -->
+	<link rel="stylesheet" type="text/css"
+		  href="./js/jquery-easyui-1.9.5/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css"
+		  href="./js/jquery-easyui-1.9.5/themes/icon.css">
+	<link rel="stylesheet" type="text/css"
+		  href="./js/jquery-easyui-1.9.5/themes/color.css">
+
+
+
+	<!--    <script type="text/javascript"-->
+	<!--            src="./js/jquery-easyui-1.9.5/jquery.min.js"></script>-->
+	<!--    <script type="text/javascript"-->
+	<!--            src="./js/jquery-easyui-1.9.5/jquery.easyui.min.js"></script>-->
+	<!--    <script src="./main.js"></script>-->
+
+
+
+	<style>
+		#login_pan{
+			position:absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%,-50%);
+			border: 2px ;
+			width: 400px;
+			height: 350px;
+			text-align: center;
+			border-radius: 25px;
+			backdrop-filter: blur(2px);
+			background-color: rgba(255, 255, 255, 0.5);
+
+		}
+
+
+
+	</style>
+	<!--/************************************************************
+     *																*
+     * 						      代码库							*
+     *                        www.dmaku.com							*
+     *       		  努力创建完善、持续更新插件以及模板			*
+     * 																*
+    **************************************************************-->
+</head>
+<body style="height:100%; height:100%; overflow:hidden;">
+<canvas id="canvas" width="1920" height="100%" style="position: absolute; z-index: -1;"></canvas>
+<div id="login_pan" style="z-index: 9999;">
+	<div style="padding-top: 20px;">
+		<h2>系统登录</h2>
+		<form id="ff" method="post">
+			<div style="margin-bottom: 10px;">
+				<label >用户名:</label>
+				<input name="username" class="easyui-textbox"
+					   data-options="iconCls:'icon-man',iconWidth:30,iconAlign:'left',prompt:'用户名'"
+					   style="width:250px;height:34px;padding:10px" required="true" />
+			</div>
+
+			<div >
+				<label  style="margin-right:16px;">密码:</label>
+				<input name="password" class="easyui-passwordbox"
+					   data-options="iconWidth:30,iconAlign:'left',prompt:'密码'"
+					   style="width:250px;height:34px;padding:10px" required="true" />
+			</div>
+
+			<div style="margin-bottom: 10px;">
+				<label>验证码:</label>
+				<input name="validate" class="easyui-textbox"
+					   data-options="iconCls:'icon-lock',iconWidth:30,iconAlign:'left',prompt:'验证码'"
+					   style="width: 150px; height: 35px; margin-top:50px ;"  />
+				<span style=" position: relative; top:10px">
+                    <img
+							id="validateImage" style="cursor: pointer; margin-left: 15px;"
+							src="./validatecode.jsp" alt="验证码"
+							height="32px" width="80px"  onclick="resetCode()">
+                    </span>
+			</div>
+			<div style="text-align: center; padding-top:20px;">
+
+				<a href="#" id="loginbtn" style="width: 100px; height: 35px;"
+				   class="easyui-linkbutton" iconCls="icon-ok" onclick="login()">登陆</a>
+
+
+				<a href="#" style="width: 100px; height: 35px; margin-left: 30px;"
+				   class="easyui-linkbutton" iconCls="icon-cancel"
+				   onclick="clearForm()">重置</a>
+			</div>
+		</form>
+	</div>
+
+</div>
+
+<script src="js/main.js"></script>
+<script type="text/javascript"
+		src="./js/jquery-easyui-1.9.5/jquery.min.js"></script>
+<script type="text/javascript"
+		src="./js/jquery-easyui-1.9.5/jquery.easyui.min.js"></script>
+
+
+<script>
+	function resetCode() {
+		$("#validateImage").attr('src',"./validatecode.jsp?r="
+				+ new Date().getTime());
+	}
+	function clearForm() {
+		$('#ff').form('reset');
+	}
+
+	function login() {
+		$('#ff').form('submit',{
+			url: './signin',
+			onSubmit: function () {
+				return $(this).form('validate');
+			},
+			success : function(result) {
+				var result = eval('(' + result + ')');
+				if (result.errcode!="0") {
+					$.messager.show({
+						title : 'Error',
+						timeout : 2000,
+						msg : result.errmsg
+					});
+					$('#users_fm').form('reset');
+					resetCode();
+				} else {
+					$.messager.show({
+						title : 'Info',
+						timeout : 2000,
+						msg : result.errmsg
+					});
+					window.location.href = "./pages/index.html";
+				}
+			}
+
+
+		});
+	}
+
+</script>
+</body>
+</html>

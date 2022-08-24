@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <!-- 使用网络资源的相对路径，引入easyui库到页面中 -->
+    <link rel="stylesheet" type="text/css" href="../js/jquery-easyui-1.9.5/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../js/jquery-easyui-1.9.5/themes/icon.css">
+    <script type="text/javascript" src="../js/jquery-easyui-1.9.5/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-easyui-1.9.5/jquery.easyui.min.js"></script>
+</head>
+<body>
+
+<!-- html是超文本标记语言 ，用于定义一个静态网页页面，可以实现图文排版技术-->
+<!-- 常用的布局技术有table表格布局，和div块布局方式 -->
+<!-- ajax异步动态加载数据 -->
+<!-- 数据数据列表   --start -->
+<!-- easyui支持多模块打开，为了解决页面组件名称冲突问题，把所有组件的id加上一个模块的标志 -->
+<table id="user_dg" title="物资管理" class="easyui-datagrid" style="width:100%;height:100%;"
+       url="../mq/list"
+       toolbar="#user_toolbarv2"
+       rownumbers="true" pagination=true  fitColumns="true" singleSelect="true" pageList="[15,20,30,40,50]" pageSize="15">
+
+    <div id="user_toolbar_v2">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newmq()">新增</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroymq()">删除</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchmq()">查找</a>
+    </div>
+
+    <thead>
+    <tr>
+        <th field="s_id" width="50" hidden>不知道什么的编号</th>
+        <th field="m_id" width="50" hidden>物资种类ID</th>
+        <th field="m_name" width="50">物资名字</th>
+        <th field="s_number" width="50">数量</th>
+        <th field="s_send_time" width="50">配送物资的时间</th>
+        <th field="c_area" width="50">小区</th>
+        <th field="d_name" width="50">栋数</th>
+        <th field="a_id" width="50" hidden>a的id</th>
+        <th field="r_name" width="50">房间号</th>
+        <th field="create_time" width="50">创建时间</th>
+        <th field="update_time" width="50">修改时间</th>
+    </tr>
+    </thead>
+</table>
+
+<!-- 数据数据列表   --end -->
+
+<!-- 数据数据新增修改对话框   --start -->
+<div id="mq-dlg" class="easyui-dialog" style="width:550px;padding:10px 20px"
+     closed="true" buttons="#mq-dlg-buttons">
+    <h3>物资管理</h3>
+    <form id="mq-fm" method="post">
+        <div class="fitem">
+            <label>物资名称:</label>
+            <input id="object" name="m_id"
+                   class="easyui-combobox" style="width: 100%"
+                   data-options="valueField:'m_id',textField:'m_name',url:'/mt/typelist'"/>
+        </div>
+        <div class="fitem">
+            <label>配送时间:</label>
+            <input name="s_send_time" style="width: 100%"/>
+        </div>
+        <div class="fitem">
+            <label>物资数量:</label>
+            <input name="s_number" class="easyui-validatebox" required="true" style="width: 100%"/>
+        </div>
+        <div class="fitem">
+            <label>地    址    ID:</label>
+            <input id="water_type" name="a_id"
+                   class="easyui-combobox" style="width: 100%"
+                   data-options="valueField:'a_id',textField:'a_location',url:'/addVoList'" />
+        </div>
+
+    </form>
+</div>
+<div id="mq-dlg-buttons">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="savemq()">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#mq-dlg').dialog('close')">取消</a>
+</div>
+
+<script type="text/javascript">
+
+    function newmq(){
+        $('#mq-dlg').dialog('open').dialog('setTitle','新增物资');
+        $('#mq-fm').form('clear');
+        url = '../mq/add';
+        loadWaterTypeSuccess(0);
+        loadObjectTypeSuccess(0);
+    }
+
+    function editUser(){
+        var row = $('#user_dg').datagrid('getSelected');
+        if (row){
+            $('#mq-dlg').dialog('open').dialog('setTitle','修改物资');
+            $('#mq-fm').form('load',row);
+            url = '../mq/edit?s_id='+row.s_id;
+        }
+    }
+
+
+    function savemq(){
+        // alert(13)
+        $('#mq-fm').form('submit',{
+            url: url,
+            onSubmit: function(){
+                return $(this).form('validate');
+            },
+            success: function(result){
+                var result = eval('('+result+')');
+                if (result.success){
+                    $.messager.show({	// show error message
+                        title: 'Success',
+                        msg: result.errorMsg
+                    });
+                }else{
+                    $.messager.show({	// show error message
+                        title: 'Error',
+                        msg: result.errorMsg
+                    });
+                }
+
+                $('#mq-dlg').dialog('close');		// close the dialog
+                $('#user_dg').datagrid('reload');	// reload the user data
+            }
+        });
+    }
+
+    function destroymq(){
+        var row = $('#user_dg').datagrid('getSelected');
+        if (row){
+            $.messager.confirm('Confirm','确定删除该条信息？',function(r){
+                if (r){
+                    $.post('../mq/delete',{s_id:row.s_id},function(result){
+                        if (result.success){
+                            $('#user_dg').datagrid('reload');	// reload the user data
+                            $.messager.show({	// show error message
+                                title: 'Success',
+                                msg: result.errorMsg
+                            });
+                        } else {
+                            $.messager.show({	// show error message
+                                title: 'Error',
+                                msg: result.errorMsg
+                            });
+                        }
+                    },'json');
+                }
+            });
+        }
+    }
+
+    function searchmq(){
+
+    }
+
+    //下拉列表反选
+    function loadWaterTypeSuccess(value) {
+        var data = $("#water_type").combobox("getData");
+        if (data && data.length > 0) {
+            if (value == 0) {
+                $("#water_type").combobox("setValue", data[0].a_id);
+            } else {
+                $("#water_type").combobox("setValue", value);
+            }
+        }
+    }
+
+    //下拉列表反选
+    function loadObjectTypeSuccess(value) {
+        var data = $("#object").combobox("getData");
+        if (data && data.length > 0) {
+            if (value == 0) {
+                $("#object").combobox("setValue", data[0].m_id);
+            } else {
+                $("#object").combobox("setValue", value);
+            }
+        }
+    }
+
+</script>
+
+</body>
+</html>

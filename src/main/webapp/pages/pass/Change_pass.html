@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- 下载并引入jquery easyUI -->
+    <link rel="stylesheet" type="text/css"
+          href="../../js/jquery-easyui-1.9.5/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css"
+          href="../../js/jquery-easyui-1.9.5/themes/icon.css">
+    <link rel="stylesheet" type="text/css"
+          href="../../js/jquery-easyui-1.9.5/themes/color.css">
+    <script type="text/javascript"
+            src="../../js/jquery-easyui-1.9.5/jquery.min.js"></script>
+    <script type="text/javascript"
+            src="../../js/jquery-easyui-1.9.5/jquery.easyui.min.js"></script>
+
+</head>
+
+<body>
+<div id="root_context">
+    <form id="ffform" method="post">
+        <div style="margin-bottom: 10px;">
+            <label >旧密码:</label>
+            <input  name="oldpassword"  class="easyui-validatebox easyui-passwordbox" prompt="Password" iconwidth="28" style="width:80%;height:34px;padding:10px;">
+        </div>
+        <div style="margin-bottom:10px">
+            <label >新密码:</label>
+            <input  id="password" name="password" class="easyui-validatebox easyui-passwordbox" prompt="Password" iconwidth="28"  invalidMessage="两次输入密码不匹配" style="width:79%;height:34px;padding:10px">
+        </div>
+        <div style="margin-bottom:10px">
+            <label >新密码:</label>
+            <input  name="repassword" class="easyui-validatebox easyui-passwordbox" prompt="Password" iconwidth="28" validType="equalTo['#password']" invalidMessage="两次输入密码不匹配" style="width:79%;height:34px;padding:10px">
+        </div>
+
+        <a href="#" id="submit" style="width: 100px; height: 35px;"
+           class="easyui-linkbutton" iconCls="icon-ok" onclick="tosubmit()">确认</a>
+    </form>
+</div>
+
+<script>
+    $.extend($.fn.validatebox.defaults.rules, {
+        /*必须和某个字段相等*/
+        equalTo: { validator: function (value, param) { return $(param[0]).val() == value; }, message: '字段不匹配' }
+    });
+    function tosubmit() {
+        $('#ffform').form('submit', {
+            url: './changePass',
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (result) {
+                var result = eval('(' + result + ')');
+                if (result.errcode != "0") {
+                    $.messager.show({
+                        title: 'Error',
+                        timeout: 2000,
+                        msg: result.errmsg
+                    });
+
+                } else {
+                    $.messager.show({
+                        title: 'Info',
+                        timeout: 2000,
+                        msg: result.errmsg
+                    });
+                    window.location.href="../../login.html";
+                }
+            }
+
+
+        });
+    }
+</script>
+</body>
+</html>

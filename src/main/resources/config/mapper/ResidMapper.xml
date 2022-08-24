@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smf.wqphd.dao.ResidDao">
+    <select id="selectById"  resultType="com.smf.wqphd.bean.Resident" parameterType="int" >
+
+        SELECT p_name,p_telephone,p_card,p_email,h_status,h_case FROM tbl_peoplemanage  WHERE a_id=#{a_id};
+
+    </select>
+</mapper>

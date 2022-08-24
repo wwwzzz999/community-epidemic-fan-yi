@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html xmlns:url="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <!-- 使用网络资源的相对路径，引入easyui库到页面中 -->
+    <link rel="stylesheet" type="text/css" href="../../js/jquery-easyui-1.9.5/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../js/jquery-easyui-1.9.5/themes/icon.css">
+    <script type="text/javascript" src="../../js/jquery-easyui-1.9.5/jquery.min.js"></script>
+    <script type="text/javascript" src="../../js/jquery-easyui-1.9.5/jquery.easyui.min.js"></script>
+</head>
+<body>
+
+<!-- html是超文本标记语言 ，用于定义一个静态网页页面，可以实现图文排版技术-->
+<!-- 常用的布局技术有table表格布局，和div块布局方式 -->
+<!-- ajax异步动态加载数据 -->
+<!-- 数据数据列表   --start -->
+<!-- easyui支持多模块打开，为了解决页面组件名称冲突问题，把所有组件的id加上一个模块的标志 -->
+<table id="user_dg" title="小区区域管理" class="easyui-datagrid" style="width:100%;height:100%;"
+       url="/list"
+       toolbar="#user_toolbar "
+       rownumbers="true" pagination=true  fitColumns="true" singleSelect="true" pageList="[15,20,30,40,50]" pageSize="15">
+    <thead>
+    <tr>
+        <th field="a_Id" width="30">地区编号</th>
+        <th field="c_Area" width="40">小区名称</th>
+        <th field="d_Name" width="30">栋号</th>
+        <th field="r_Name" width="30">房间号</th>
+        <th width="50" data-options="field:'_operate',formatter:formatOper">操作</th>
+    </tr>
+    </thead>
+</table>
+<div id="user_toolbar">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">新增</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyUser()">删除</a>
+        <input type="text" name="standard" id="ss"  placeholder="栋-房间"/>
+        <a id="standardQueryBtn" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="Search()">搜索</a>
+
+</div>
+
+<!-- 数据数据列表   --end -->
+
+<!-- 数据数据新增修改对话框   --start -->
+<div id="user_dlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
+     closed="true" buttons="#user_dlg-buttons">
+    <div class="ftitle"></div>
+    <form id="user_fm" method="post">
+<!--        <div class="fitem">-->
+<!--            <label>小区名:</label>-->
+<!--            <input name="c_Area" class="easyui-validatebox" >-->
+<!--        </div>-->
+        <div class="fitem">
+            <label>小区名称:</label>
+        <input class="easyui-combobox" required="true" name="c_Area" data-options="
+                    panelHeight:'auto',
+                    valueField: 'label',
+                    textField: 'value',
+                    data: [{
+                        label: '寸金小区',
+                        value: '寸金小区'
+                    }]">
+        </div>
+        <div class="fitem" style="margin-left:40px">
+            <label>栋:</label>
+            <input name="d_Name" class="easyui-textbox" required="true">
+        </div>
+        <div class="fitem" style="margin-left:30px">
+            <label>房间:</label>
+            <input name="r_Name" class="easyui-textbox" required="true">
+        </div>
+
+
+
+    </form>
+</div>
+<div id="user_dlg-buttons">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#user_dlg').dialog('close')">取消</a>
+</div>
+
+
+<!--修改框-->
+<div id="user_dlg1" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
+     closed="true" buttons="#user_dlg-buttons1">
+    <div class="ftitle"></div>
+    <form id="user_fm1" method="post">
+        <div class="fitem" style="margin-left:40px">
+            <label>id:</label>
+        <input name="a_Id" class="easyui-textbox" readonly="readonly">
+        </div>
+            <div class="fitem">
+            <label>小区名称:</label>
+            <input class="easyui-combobox" required="true" name="c_Area" data-options="
+                    valueField: 'label',
+                    textField: 'value',
+                    data: [{
+                        label: '寸金小区',
+                        value: '寸金小区'
+                    },{
+                        label: '不可选',
+                        value: '不可选'
+                    },{
+                        label: '不可选',
+                        value: '不可选'
+                    }]">
+        </div>
+        <div class="fitem" style="margin-left:40px">
+            <label>栋:</label>
+            <input name="d_Name" class="easyui-textbox" required="true">
+        </div>
+        <div class="fitem" style="margin-left:30px">
+            <label>房间:</label>
+            <input name="r_Name" class="easyui-textbox" required="true">
+        </div>
+    </form>
+</div>
+<div id="user_dlg-buttons1">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser1()">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#user_dlg1').dialog('close')">取消</a>
+</div>
+
+
+
+
+<!-- 数据数据新增修改对话框   --end -->
+
+
+<!--搜索弹出窗口-->
+<div id="show_dd" closed="true" class="easyui-dialog" title="My Dialog" style="width:400px;height:200px;" data-options="iconCls:'icon-save',resizable:true,modal:true">
+    <table id="show_res" title="系统用户管理" class="easyui-datagrid" style="width:100%;height:100%;">
+        <thead>
+        <tr>
+            <th field="a_Id" width="50">地区编号</th>
+            <th field="c_Area" width="80">小区名称</th>
+            <th field="d_Name" width="50">栋号</th>
+            <th field="r_Name" width="50">房间号</th>
+            <th width="180" data-options="field:'_operate',formatter:formatOper">操作</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<!--家庭成员窗口-->
+<div id="de_dd" closed="true" class="easyui-dialog" title="信息展示" style="width:800px;height:300px;" data-options="iconCls:'icon-save',resizable:true,modal:true">
+    <table id="show_user" title="系统用户管理" class="easyui-datagrid" style="width:100%;height:100%;">
+        <thead>
+        <tr>
+            <th field="p_Name" width="50">名字</th>
+            <th field="p_Telephone" width="120">电话</th>
+            <th field="p_Card" width="160">身份证</th>
+            <th field="p_Email" width="120">邮箱</th>
+            <th field="h_Status" width="120">健康状态</th>
+            <th field="h_Case" width="120">异常信息</th>
+<!--            <th width="80" data-options="field:'_operate',formatter:formatOper">操作</th>-->
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<!--物资-->
+<div id="de_dd1" closed="true" class="easyui-dialog" title="My Dialog" style="width:600px;height:300px;" data-options="iconCls:'icon-save',resizable:true,modal:true">
+    <table id="show_mq" title="家庭物资需求表" class="easyui-datagrid" style="width:100%;height:100%;">
+        <thead>
+        <tr>
+            <th field="m_name" width="80">物资名称</th>
+            <th field="d_number" width="50">数量</th>
+            <th field="s_send_time" width="160">获取时间</th>
+            <th field="m_desc" width="120">描述</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    function Search() {
+        var getData=$("#ss").val();
+        //数据分割
+        var items=getData.split("-");
+
+        $('#show_res').datagrid({
+            url:"/search?d_name="+items[0]+"&r_name="+items[1],
+            rows:[[]]
+        });
+
+        $('#show_dd').dialog('open');
+
+
+        // $.ajax({
+        //     url:"./search?d_name="+items[0]+"&r_name="+items[1],
+        //     type:"POST",
+        //     // data:{"plancode":plancode},
+        //     success:function(result){
+        //       //  var result = eval('('+result+')');
+        //         console.log(result.result);
+        //
+        //         //data为后台返回值。我们这里后台返回的是map类型。map.put("latiao":3.5);所以到前台取值方式：
+        //         $('#show_res').datagrid("reload",{
+        //             rows:result.result,
+        //         });
+        //         $('#show_dd').dialog('open');
+        //
+        //     }
+        // })
+
+        // var table=$("#user_dg").datagrid("getRows"); 获取表格所有数据
+
+
+        //$("#show_dd").window("open");
+    }
+
+
+
+    function formatOper(val, row, index) {
+        return '<a href="javascript:void(0)" onclick="showUser(' + index
+            + ')">家庭成员</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onclick="showMq(' + index
+            + ')">物资需求</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+    }
+    //家庭成员
+    function showUser(index) {
+        var a_id = $('#user_dg').datagrid('getData').rows[index].a_Id;
+        $('#show_user').datagrid({
+             url:"/getResid?a_id="+a_id,
+            rows:[[]]
+        });
+
+        $('#de_dd').window('open');
+    }
+
+
+    function showMq(index){
+        var a_id = $('#user_dg').datagrid('getData').rows[index].a_Id;
+        console.log(a_id);
+        $('#de_dd1').window('open');
+        $('#show_mq').datagrid({
+             url:"/selectmq?a_id="+a_id,
+             rows:[[]]
+        });
+
+
+
+    }
+
+    function newUser(){
+        $('#user_dlg').dialog('open').dialog('setTitle','新增用户');
+        $('#user_fm').form('clear');
+        // url = '../usermessage/add';
+    }
+
+
+    function saveUser1() {
+        $('#user_fm1').form('submit',{
+            url: "/edit",
+            onSubmit: function(){
+                return $(this).form('validate');
+            },
+            success: function(result){
+                var result = eval('('+result+')');
+
+                if(result.errcode=="0"){
+                    $.messager.show({
+                        title: 'Info',
+                        msg: result.errmsg
+                    });
+                }else{
+                    $.messager.show({
+                        title: 'Error',
+                        msg: result.errmsg
+                    });
+                }
+
+                $('#user_dlg').dialog('close');		// close the dialog
+                $('#user_dg').datagrid('reload');	// reload the user data
+            }
+        });
+    }
+
+
+
+    function editUser(){
+        var row = $('#user_dg').datagrid('getSelected');
+        console.log(row);
+        if (row){
+            $('#user_dlg1').dialog('open').dialog('setTitle','修改用户');
+            $('#user_fm1').form('load',row);
+            // url = '../usermessage/edit?userNo='+row;
+        }
+    }
+
+
+    function saveUser(){
+        $('#user_fm').form('submit',{
+            url: "add",
+            onSubmit: function(){
+                return $(this).form('validate');
+            },
+            success: function(result){
+                var result = eval('('+result+')');
+
+                if(result.errcode=="0"){
+                $.messager.show({
+                    title: 'Info',
+                    msg: result.errmsg
+                });
+                }else{
+                    $.messager.show({
+                        title: 'Error',
+                        msg: result.errmsg
+                    });
+                }
+
+                $('#user_dlg').dialog('close');		// close the dialog
+                $('#user_dg').datagrid('reload');	// reload the user data
+            }
+        });
+    }
+
+    function destroyUser(){
+        var row = $('#user_dg').datagrid('getSelected');
+        console.log(row);
+        if (row){
+            $.messager.confirm('Confirm','Are you sure you want to destroy this user?',function(r){
+                if (r){
+                    $.post('/delete',{a_Id:row.a_Id},function(result){
+                        if (result.errcode=="0"){
+                            $('#user_dg').datagrid('reload');	// reload the user data
+                        } else {
+                            $.messager.show({	// show error message
+                                title: 'Error',
+                                msg: result.errmsg
+                            });
+                        }
+                    },'json');
+                }
+            });
+        }
+    }
+
+</script>
+
+</body>
+</html>

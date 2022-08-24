@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <!-- 使用网络资源的相对路径，引入easyui库到页面中 -->
+    <link rel="stylesheet" type="text/css" href="../../js/jquery-easyui-1.9.5/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../js/jquery-easyui-1.9.5/themes/icon.css">
+    <script type="text/javascript" src="../../js/jquery-easyui-1.9.5/jquery.min.js"></script>
+    <script type="text/javascript" src="../../js/jquery-easyui-1.9.5/jquery.easyui.min.js"></script>
+</head>
+<body>
+
+<!-- html是超文本标记语言 ，用于定义一个静态网页页面，可以实现图文排版技术-->
+<!-- 常用的布局技术有table表格布局，和div块布局方式 -->
+<!-- ajax异步动态加载数据 -->
+<!-- 数据数据列表   --start -->
+<!-- easyui支持多模块打开，为了解决页面组件名称冲突问题，把所有组件的id加上一个模块的标志 -->
+<table id="user_dg" title="新增人员" class="easyui-datagrid" style="width:100%;height:100%;"
+       url="../pm/list"
+       toolbar="#user_toolbar4"
+       rownumbers="true" pagination=true  fitColumns="true" singleSelect="true">
+
+    <div id="user_toolbar_v4">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newpm()">新增</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editpm()">编辑</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroypm()">删除</a>
+        <input id="ss" class="easyui-combobox" height="10px" style="width: 100px"  data-options="
+                    panelHeight:'auto',
+                    valueField: 'label',
+                    textField: 'value',
+                    data: [{
+                        label: '绿码',
+                        value: '绿码'
+                    },{
+                        label: '黄码',
+                        value: '黄码'
+                    },{
+                        label: '红码',
+                        value: '红码'
+                    }]">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchpm()">查找</a>
+    </div>
+
+    <thead>
+    <tr>
+        <th field="p_id" width="50" hidden>ID</th>
+        <th field="p_name" width="50">Name</th>
+        <th field="p_telephone" width="50">电话</th>
+        <th field="p_card" width="50">身份证</th>
+        <th field="p_email" width="50">邮箱</th>
+        <th field="create_time" width="70">创建时间</th>
+        <th field="update_time" width="70">修改时间</th>
+        <th field="a_id" width="50" hidden>地址ID</th>
+        <th field="c_area" width="50">小区</th>
+        <th field="d_name" width="20">栋数</th>
+        <th field="r_name" width="30">房间号</th>
+        <th field="h_status" width="50" formatter="q">状态</th>
+        <th field="h_case" width="50">原因</th>
+    </tr>
+    </thead>
+    <script>
+        function q(value, row, index) {
+            if (value=="绿码") {
+                return "<div style='color: #1ba71b'>" + value + "";
+            } else if(value=='黄码'){
+                return "<div style='color: #ffe002'>" + value + "";
+            }else if(value=='红码'){
+                return "<div style='color: #f60000'>" + value + "";
+            }
+        }
+    </script>
+</table>
+
+<!-- 数据数据列表   --end -->
+
+<!-- 数据数据新增修改对话框   --start -->
+<div id="pm-dlg" class="easyui-dialog" style="width:550px;height:520px;padding:10px 20px"
+     closed="true" buttons="#pm-dlg-buttons">
+    <div class="ftitle"><h4>人员管理</h4></div>
+
+    <!--    <div class="easyui-panel" style="width:100%;max-width:400px;padding:30px 60px;">-->
+    <!--        <div style="margin-bottom:20px">-->
+    <!--            <input class="easyui-datetimebox" label="Select DateTime:" labelPosition="top" style="width:100%;">-->
+    <!--        </div>-->
+    <!--        <div style="margin-bottom:20px">-->
+    <!--            <input class="easyui-textbox" label="Description:" labelPosition="top" style="width:100%;">-->
+    <!--        </div>-->
+    <!--    </div>-->
+
+    <form id="pm-fm" method="post">
+        <div class="fitem">
+            <label>姓名:</label>
+            <input class="easyui-textbox" name="p_name"  required="true" style="width: 100%">
+        </div>
+        <div class="fitem">
+            <label>电话号码:</label>
+            <input class="easyui-textbox" name="p_telephone"  style="width: 100%">
+        </div>
+        <div class="fitem">
+            <label>证件号:</label>
+            <input class="easyui-textbox" name="p_card" required="true" style="width: 100%">
+        </div>
+
+        <!--        <div class="fitem">-->
+        <!--            <label>更新时间:</label>-->
+        <!--            <input name="update_time" class="easyui-validatebox" >-->
+        <!--        </div>-->
+
+        <div class="fitem">
+            <label>邮箱:</label>
+            <input class="easyui-textbox" name="p_email" class="easyui-validatebox" style="width: 100%">
+        </div>
+        <div class="fitem">
+            <label>详细地址:</label>
+            <input id="area_id" name="a_id"
+                   class="easyui-combobox" style="width: 100%"
+                   data-options="valueField:'a_id',textField:'a_location',url:'/addVoList'" />
+        </div>
+        <div class="fitem">
+            <label>健康状态:</label>
+            <input class="easyui-combobox" height="10px" style="width: 100%" required="true" name="h_status" data-options="
+                    panelHeight:'auto',
+                    valueField: 'label',
+                    textField: 'value',
+                    data: [{
+                        label: '绿码',
+                        value: '绿码'
+                    },{
+                        label: '黄码',
+                        value: '黄码'
+                    },{
+                        label: '红码',
+                        value: '红码'
+                    }]">
+        </div>
+        <div class="fitem">
+            <label>原因:</label>
+            <input class="easyui-textbox" name="h_case" class="easyui-validatebox" style="width: 100%">
+        </div>
+
+    </form>
+</div>
+<div id="pm-dlg-buttons">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="savepm()">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#pm-dlg').dialog('close')">取消</a>
+</div>
+<!-- 数据数据新增修改对话框   --end -->
+
+
+<div id="show_dd" closed="true" class="easyui-dialog" title="信息展示" style="width:1000px;height:500px;" data-options="iconCls:'icon-save',resizable:true,modal:true">
+    <table id="show_res" title="管理" class="easyui-datagrid" style="width:100%;height:100%;">
+        <thead>
+        <tr>
+            <th field="p_id" width="50" hidden>ID</th>
+            <th field="p_name" width="50">Name</th>
+            <th field="p_telephone" width="100">电话</th>
+            <th field="p_card" width="160">身份证</th>
+            <th field="p_email" width="130">邮箱</th>
+            <th field="create_time" width="150">创建时间</th>
+            <th field="update_time" width="150">修改时间</th>
+            <th field="a_id" width="50" hidden>地址ID</th>
+            <th field="c_area" width="80">小区</th>
+            <th field="d_name" width="40">栋数</th>
+            <th field="r_name" width="50">房间号</th>
+            <th field="h_status" width="50" formatter="q">状态</th>
+            <th field="h_case" width="50">原因</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+
+    function newpm(){
+        $('#pm-dlg').dialog('open').dialog('setTitle','新增人员信息');
+        $('#pm-fm').form('clear');
+        url = '../pm/add';
+    }
+
+    function editpm(){
+        var row = $('#user_dg').datagrid('getSelected');
+        if (row){
+            $('#pm-dlg').dialog('open').dialog('setTitle','修改人员信息');
+            $('#pm-fm').form('load',row);
+            url = '../pm/edit?p_id='+row.p_id;
+        }
+    }
+
+
+    function savepm(){
+        $('#pm-fm').form('submit',{
+            url: url,
+            onSubmit: function(){
+                return $(this).form('validate');
+            },
+            success: function(result){
+                var result = eval('('+result+')');
+
+                $.messager.show({
+                    title: '提示',
+                    msg: result.errorMsg
+                });
+
+                $('#pm-dlg').dialog('close');		// close the dialog
+                $('#user_dg').datagrid('reload');	// reload the user data
+            }
+        });
+    }
+
+    function destroypm(){
+        var row = $('#user_dg').datagrid('getSelected');
+        if (row){
+            $.messager.confirm('Confirm','确定删除该条信息？',function(r){
+                if (r){
+                    $.post('../pm/delete',{p_id:row.p_id},function(result){
+                        if (result.success){
+                            $('#user_dg').datagrid('reload');	// reload the user data
+                        } else {
+                            $.messager.show({	// show error message
+                                title: 'Error',
+                                msg: result.errorMsg
+                            });
+                        }
+                    },'json');
+                }
+            });
+        }
+    }
+
+    function searchpm(){
+
+        var getData=$("#ss").val();
+        //数据分割
+        // var items=getData.split("-");
+
+        $('#show_res').datagrid({
+            url:"/pm/selectbystatus?h_status="+getData,
+            rows:[[]]
+        });
+
+        $('#show_dd').dialog('open');
+
+    }
+
+    function loadWaterTypeSuccess(value) {
+        var data = $("#area_id").combobox("getData");
+        if (data && data.length > 0) {
+            if (value == 0) {
+                $("#area_id").combobox("setValue", data[0].a_id);
+            } else {
+                $("#area_id").combobox("setValue", value);
+            }
+        }
+    }
+
+    //下拉列表反选
+    // function loadObjectTypeSuccess(value) {
+    //     var data = $("#object").combobox("getData");
+    //     if (data && data.length > 0) {
+    //         if (value == 0) {
+    //             $("#object").combobox("setValue", data[0].m_id);
+    //         } else {
+    //             $("#object").combobox("setValue", value);
+    //         }
+    //     }
+    // }
+
+
+</script>
+
+</body>
+</html>
