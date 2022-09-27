@@ -1,3 +1,6 @@
+![小区防疫管理系统](https://user-images.githubusercontent.com/68486363/192464269-b3e87403-73e6-4dc1-b690-5355747e2c5e.png)
+
+
 首页展示
 ![image](https://user-images.githubusercontent.com/68486363/192463456-92b7a16c-accd-4954-8168-e771689e6a1e.png)
 
