@@ -1,6 +1,6 @@
 首页展示
 ![image](https://user-images.githubusercontent.com/68486363/192463456-92b7a16c-accd-4954-8168-e771689e6a1e.png)
-![image](https://user-images.githubusercontent.com/68486363/192463600-1a740167-93cf-4f9c-bb3c-81752619ad4e.png)
+
 
 功能模块
 ![image](https://user-images.githubusercontent.com/68486363/192463646-eeff8673-07bc-45ac-88ab-10074b1bcdc5.png)
